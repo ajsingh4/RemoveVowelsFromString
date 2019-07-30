@@ -13,43 +13,35 @@
 using namespace std;
 
 bool checkForVowels(char* A){
-    if(*A == 'A' || *A == 'A'){
-        return true;
-    }
-    else if(*A == 'E' || *A == 'e'){
-        return true;
-    }
-    else if(*A == 'I' || *A == 'i'){
-        return true;
-    }
-    else if(*A == 'O' || *A == 'o'){
-        return true;
-    }
-    else if(*A == 'U' || *A == 'u'){
+    if(*A == 'A' || *A == 'a' || *A == 'E' || *A == 'e' || *A == 'I' || *A == 'i' || *A == 'O' || *A == 'o' || *A == 'U' || *A == 'u'){
         return true;
     }
     else{
         return false;
     }
 }
-
 string removeVowels(string word){
-    string answer;
-    //Initialize a stack to utilize LIFO
-    stack<char> reverser;
+    int vowelCount = 0;
+    reverse(word.begin(),word.end());
     for(int i=0; i<word.length(); i++){
-        //If the letter is not a vowel, it is added to the stack
-        if(!checkForVowels(&word[i])){
-            reverser.push(word[i]);
+        //If it is a vowel and the number of characters + vowel count doesnt exceed word length
+        if(checkForVowels(&word[i]) && (i+vowelCount <= word.length())){
+            cout << "Run #" << i << " word: " << word << "\n";
+            //Keeping track of the vowelCount to use as an index later
+            vowelCount++;
+            //Store the vowel temporarily
+            char vowel = word[i];
+            //Iterate through the rest of the array moving the characters up
+            for(int j=i; j<word.length(); j++){
+                word[j] = word[j+1];
+            }
+            //Append the vowel at the end
+            word[word.length()-1] = vowel;
         }
     }
-    int size = reverser.size();
-    //Go through the stack elements and get characters in the reverse order
-    for(int j=0; j<size; j++){
-        answer += reverser.top();
-        reverser.pop();
-    }
-    return answer;
+    //Cut off the vowels at the end of the string
+    word = word.substr(0,vowelCount);
+    return word;
 }
 
 int main() {
