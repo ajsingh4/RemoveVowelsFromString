@@ -12,55 +12,26 @@
 //For ease of access
 using namespace std;
 
-//Function that returns true if it's a vowel, false otherwise
-bool checkForVowels(char* A){
-    if(*A == 'A' || *A == 'a' || *A == 'E' || *A == 'e' || *A == 'I' || *A == 'i' || *A == 'O' || *A == 'o' || *A == 'U' || *A == 'u'){
-        return true;
-    }
-    else{
-        return false;
-    }
-}
-string removeVowels(string word){
-    int vowelCount = 0;
-    set<int> vowelIndices;
-    //Handle the reversing before doing any manipulation
-    reverse(word.begin(),word.end());
+void removeVowels(string &word){
+    //Initialize strings of vowels to search
+    string capitalVowels = "AEIOU", lowercaseVowels = "aeiou";
+    //Initialize "slow" pointer
+    int consonantLocation = 0;
     for(int i=0; i<word.length(); i++){
-        //If it is a vowel and the number of characters + vowel count doesnt exceed word length
-        if(checkForVowels(&word[i])){
-            //Keeping track of the vowelCount to use as an index later
-            if(!vowelIndices.count(i)){
-                vowelCount++;
-            }
-            //Store the index of the vowel
-            vowelIndices.insert(i);
+        //If it's not a vowel
+        if(capitalVowels.find(word[i]) == string::npos && lowercaseVowels.find(word[i]) == string::npos){
+            //Swapping the consonant for a vowel location & moving the consonant location pointer up
+            word[consonantLocation] = word[i];
+            consonantLocation++;
         }
-
-        else if(!vowelIndices.empty()){
-            //Get the first available index
-            int index = *vowelIndices.begin();
-            //Erase that index from the set
-            vowelIndices.erase(vowelIndices.begin());
-            //Insert new index into the set
-            vowelIndices.insert(i);
-            //Store the current consonant
-            char temp = word[i];
-            //Set the current consonants place = to the vowels
-            word[i] = word[index];
-            //Store the old consonant into the vowels place
-            word[index] = temp;
-        }
-        
     }
-    //Cut off the vowels at the end of the string
-    word = word.substr(0,word.length()-vowelCount);
-    return word;
+    //Get the beginning portion of the word that contains only consonants
+    word.resize(consonantLocation);
 }
 
 int main() {
-    string word = "siiaxasiuebvalvvnueaioewhfhaljkbcsxcal";
+    string word = "AIRPLANE";
     cout << "Initial word: " << word;
-    string finalAnswer = removeVowels(word);
-    cout << "\nWord reversed without vowels: " << finalAnswer << endl;
+    removeVowels(word);
+    cout << "\nWord without vowels: " << word << endl;
 }
